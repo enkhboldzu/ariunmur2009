@@ -1,0 +1,50 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+#  pull_request:
+#    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22.20.0]
+    env:
+      VUE_WEBSITE_URL: ${{secrets.VUE_WEBSITE_URL}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: false
+
+      # # .env is not tracked in git (real secrets live only on the server).
+      # # A self-hosted runner's workspace persists across runs, so a checkout
+      # # that removes a file from the tracked tree also deletes it from disk
+      # # — restore it from a copy kept outside the git working tree so a
+      # # missing/renamed .env in git history can never take down the app.
+      # - name: Restore .env
+      #   run: cp /home/user/.env.eliteBowsysMn.production .env
+
+      # # No cache: "npm" here — this runner is self-hosted and persistent, so
+      # # ~/.npm already survives between runs on local disk. Routing that
+      # # through GitHub's Actions cache service was pure overhead, and that
+      # # cache blob grew large enough (~618MB) to stall/hang on restore.
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+
+      # - run: pip3 install -r pyFiles/requirements.txt --quiet
+
+      # - run: npm ci
+
+      # - run: cd ./frontend/ && npm ci
+
+      # - run: cd ./frontend/ && npm run build
+
+      # - run: cd ./frontend/ && cp -r dist/ ../
+
+      # - run: pm2 restart 0
