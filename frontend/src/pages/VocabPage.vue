@@ -42,6 +42,10 @@
         >{{ levelLabel(lvl) }}</button>
       </div>
 
+      <p v-if="error" class="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-600">
+        Серверээс өгөгдөл ачаалах боломжгүй байна. Дараа дахин оролдоно уу.
+      </p>
+
       <p v-if="stats.length" class="mt-2 text-xs text-gray-500">
         HSK 1: {{ stats[0]?.count ?? 0 }} · HSK 2: {{ stats[1]?.count ?? 0 }} · HSK 3: {{ stats[2]?.count ?? 0 }}
       </p>
@@ -87,6 +91,7 @@ const selectedLevel = ref(0)
 const words = ref([])
 const stats = ref([])
 const loading = ref(true)
+const error = ref(false)
 
 const levels = [0, 1, 2, 3]
 
@@ -106,8 +111,10 @@ async function loadWords() {
     try {
       const res = await fetch(`/api/words?${params}`)
       const data = await res.json()
-      words.value = data.words
+      error.value = !res.ok
+      words.value = Array.isArray(data.words) ? data.words : []
     } catch {
+      error.value = true
       words.value = []
     } finally {
       loading.value = false
@@ -119,8 +126,8 @@ watch([search, selectedLevel], loadWords)
 
 fetch('/api/words/stats')
   .then((r) => r.json())
-  .then((d) => { stats.value = d.stats })
-  .catch(() => {})
+  .then((d) => { stats.value = Array.isArray(d.stats) ? d.stats : [] })
+  .catch(() => { stats.value = [] })
 
 loadWords()
 </script>
