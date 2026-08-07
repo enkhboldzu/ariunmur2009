@@ -1,0 +1,31 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22.20.0]
+    env:
+      VUE_WEBSITE_URL: ${{secrets.VUE_WEBSITE_URL}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+
+      - run: cd ./frontend/ && npm ci
+
+      - run: cd ./frontend/ && npm run build
+
+      - run: pm2 restart 0
