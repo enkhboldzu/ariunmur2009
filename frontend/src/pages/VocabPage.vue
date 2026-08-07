@@ -70,7 +70,22 @@
           </span>
           <div class="flex-1">
             <div class="flex items-baseline gap-3">
-              <span class="text-2xl font-semibold leading-none text-gray-900">{{ w.simplified }}</span>
+              <button
+                type="button"
+                class="text-2xl font-semibold leading-none text-gray-900 transition hover:text-indigo-600"
+                :aria-label="`Сонсох: ${w.simplified}`"
+                @click="speak(w.simplified)"
+              >{{ w.simplified }}</button>
+              <button
+                type="button"
+                class="text-gray-400 transition hover:text-indigo-600"
+                :aria-label="`Дуу: ${w.simplified}`"
+                @click="speak(w.simplified)"
+              >
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.23v2.06a7 7 0 0 1 0 13.42v2.06a9 9 0 0 0 0-17.54z" />
+                </svg>
+              </button>
               <span class="text-sm text-gray-500">{{ w.pinyin }}</span>
               <span class="ml-auto text-sm text-gray-400">#{{ w.rank }}</span>
             </div>
@@ -100,6 +115,25 @@ const levels = [0, 1, 2, 3, 4, 5]
 function levelLabel(lvl) {
   if (lvl === 0) return 'Бүгд'
   return `HSK ${lvl}`
+}
+
+function speak(text) {
+  if (!text) return
+  const synth = window.speechSynthesis
+  const zh = synth
+    ? synth.getVoices().find((v) => v.lang.toLowerCase().replace('_', '-').startsWith('zh'))
+    : null
+  if (zh) {
+    synth.cancel()
+    const u = new SpeechSynthesisUtterance(text)
+    u.lang = zh.lang
+    u.voice = zh
+    u.rate = 0.85
+    synth.speak(u)
+    return
+  }
+  const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=zh-CN&q=${encodeURIComponent(text)}`)
+  audio.play().catch(() => {})
 }
 
 let timer
