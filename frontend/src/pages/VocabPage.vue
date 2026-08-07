@@ -48,6 +48,7 @@
 
       <p v-if="stats.length" class="mt-2 text-xs text-gray-500">
         HSK 1: {{ stats[0]?.count ?? 0 }} · HSK 2: {{ stats[1]?.count ?? 0 }} · HSK 3: {{ stats[2]?.count ?? 0 }}
+        · HSK 4: {{ stats[3]?.count ?? 0 }} · HSK 5: {{ stats[4]?.count ?? 0 }}
       </p>
 
       <div v-if="loading" class="mt-8 space-y-3">
@@ -93,7 +94,7 @@ const stats = ref([])
 const loading = ref(true)
 const error = ref(false)
 
-const levels = [0, 1, 2, 3]
+const levels = [0, 1, 2, 3, 4, 5]
 
 function levelLabel(lvl) {
   if (lvl === 0) return 'Бүгд'
