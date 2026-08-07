@@ -110,8 +110,8 @@
               <span class="ml-auto text-sm text-gray-400">#{{ w.rank }}</span>
               <button
                 type="button"
-                class="text-gray-300 transition hover:text-amber-400"
-                :class="isFavorite(w.id) ? 'text-amber-400' : ''"
+                class="transition hover:text-amber-400"
+                :class="isFavorite(w.id) ? 'text-amber-400' : 'text-gray-300'"
                 :aria-label="`Онцлох: ${w.simplified}`"
                 @click="toggleFavorite(w.id)"
               >
