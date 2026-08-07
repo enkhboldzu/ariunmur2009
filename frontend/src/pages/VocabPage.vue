@@ -66,12 +66,13 @@
           class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
         >
           <span class="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-semibold text-indigo-600">
-            {{ w.hsk_level }}
+            HSK {{ w.hsk_level }}
           </span>
           <div class="flex-1">
             <div class="flex items-baseline gap-3">
               <span class="text-2xl font-semibold leading-none text-gray-900">{{ w.simplified }}</span>
               <span class="text-sm text-gray-500">{{ w.pinyin }}</span>
+              <span class="ml-auto text-sm text-gray-400">#{{ w.rank }}</span>
             </div>
             <div class="mt-1 text-sm text-gray-800">{{ w.meaning_mn }}</div>
             <div v-if="w.meaning_en" class="text-xs text-gray-400">{{ w.meaning_en }}</div>
