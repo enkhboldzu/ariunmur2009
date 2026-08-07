@@ -43,11 +43,13 @@ app.get('/api/words', async (req, res, next) => {
     }
 
     const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : ''
+    const sortKey =
+      `TRANSLATE(LOWER(pinyin), 'āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü', 'aaaaeeeeiiiioooouuuuuuuuuu')`
     const { rows } = await pool.query(
       `SELECT id, hsk_level, simplified, pinyin, meaning_mn, meaning_en,
-              ROW_NUMBER() OVER (PARTITION BY hsk_level ORDER BY id)::int AS rank
+              ROW_NUMBER() OVER (PARTITION BY hsk_level ORDER BY ${sortKey}, pinyin, id)::int AS rank
        FROM words ${where}
-       ORDER BY hsk_level, id`,
+       ORDER BY hsk_level, ${sortKey}, pinyin, id`,
       params
     )
     res.json({ count: rows.length, words: rows })
