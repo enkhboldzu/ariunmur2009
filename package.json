@@ -13,12 +13,14 @@
     "build:frontend": "cd frontend && npx vite build",
     "watch:frontend": "cd frontend && npx vite build --watch",
     "watch:server": "nodemon --watch server.js --watch config/ server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed": "node scripts/seed.js"
   },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
