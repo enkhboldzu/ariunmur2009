@@ -40,6 +40,26 @@
           ]"
           @click="selectedLevel = lvl"
         >{{ levelLabel(lvl) }}</button>
+        <button
+          type="button"
+          :class="[
+            'rounded-full px-3 py-1 text-sm font-medium transition',
+            favoriteOnly
+              ? 'bg-amber-400 text-white'
+              : 'bg-white text-gray-600 ring-1 ring-gray-200 hover:bg-gray-50',
+          ]"
+          @click="favoriteOnly = !favoriteOnly"
+        >
+          <svg
+            class="mr-1 inline-block h-3.5 w-3.5"
+            :fill="favoriteOnly ? 'currentColor' : 'none'"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.98 10.101c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+          </svg>
+          Онцлог
+        </button>
       </div>
 
       <p v-if="error" class="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-600">
@@ -55,13 +75,13 @@
         <div v-for="i in 8" :key="i" class="h-20 animate-pulse rounded-2xl bg-gray-200" />
       </div>
 
-      <p v-else-if="words.length === 0" class="mt-10 text-center text-gray-500">
-        Юу ч олдсонгүй
+      <p v-else-if="visibleWords.length === 0" class="mt-10 text-center text-gray-500">
+        {{ favoriteOnly ? 'Онцолсон үг алга' : 'Юу ч олдсонгүй' }}
       </p>
 
       <div v-else class="mt-4 space-y-3">
         <div
-          v-for="w in words"
+          v-for="w in visibleWords"
           :key="w.id"
           class="flex items-center gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
         >
@@ -88,6 +108,23 @@
               </button>
               <span class="text-sm text-gray-500">{{ w.pinyin }}</span>
               <span class="ml-auto text-sm text-gray-400">#{{ w.rank }}</span>
+              <button
+                type="button"
+                class="text-gray-300 transition hover:text-amber-400"
+                :class="isFavorite(w.id) ? 'text-amber-400' : ''"
+                :aria-label="`Онцлох: ${w.simplified}`"
+                @click="toggleFavorite(w.id)"
+              >
+                <svg
+                  class="h-5 w-5"
+                  :fill="isFavorite(w.id) ? 'currentColor' : 'none'"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.98 10.101c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
+              </button>
             </div>
             <div class="mt-1 text-sm text-gray-800">{{ w.meaning_mn }}</div>
             <div v-if="w.meaning_en" class="text-xs text-gray-400">{{ w.meaning_en }}</div>
@@ -95,13 +132,13 @@
         </div>
       </div>
 
-      <p class="mt-6 text-center text-xs text-gray-400">Нийтийн {{ words.length }} үг харагдаж байна</p>
+      <p class="mt-6 text-center text-xs text-gray-400">Нийтийн {{ visibleWords.length }} үг харагдаж байна</p>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 const search = ref('')
 const selectedLevel = ref(0)
@@ -109,6 +146,29 @@ const words = ref([])
 const stats = ref([])
 const loading = ref(true)
 const error = ref(false)
+const favoriteOnly = ref(false)
+const favorites = ref([])
+try {
+  favorites.value = JSON.parse(localStorage.getItem('starred-words') || '[]')
+} catch {
+  favorites.value = []
+}
+
+function isFavorite(id) {
+  return favorites.value.includes(id)
+}
+
+function toggleFavorite(id) {
+  if (isFavorite(id)) favorites.value = favorites.value.filter((x) => x !== id)
+  else favorites.value.push(id)
+}
+
+watch(favorites, (v) => localStorage.setItem('starred-words', JSON.stringify(v)), { deep: true })
+
+const visibleWords = computed(() => {
+  if (!favoriteOnly.value) return words.value
+  return words.value.filter((w) => favorites.value.includes(w.id))
+})
 
 const levels = [0, 1, 2, 3, 4, 5]
 
