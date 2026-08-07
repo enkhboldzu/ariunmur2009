@@ -170,4 +170,5 @@ module.exports = [
   { hsk_level: 1, simplified: '月', pinyin: 'yuè', meaning_mn: 'сар', meaning_en: 'month' },
   { hsk_level: 1, simplified: '怎么样', pinyin: 'zěnmeyàng', meaning_mn: 'ямар вэ?', meaning_en: 'how? how about?' },
   { hsk_level: 1, simplified: '中国', pinyin: 'Zhōngguó', meaning_mn: 'Хятад', meaning_en: 'China' },
+  { hsk_level: 1, simplified: '你好', pinyin: 'nǐ hǎo', meaning_mn: 'сайн байна уу', meaning_en: 'hello' },
 ]
