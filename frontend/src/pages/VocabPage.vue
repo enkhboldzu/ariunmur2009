@@ -139,9 +139,12 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const search = ref('')
-const selectedLevel = ref(0)
+const selectedLevel = ref(Number(route.query.level) || 0)
 const words = ref([])
 const stats = ref([])
 const loading = ref(true)

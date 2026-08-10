@@ -1,12 +1,20 @@
 <template>
-  <div class="flex min-h-screen flex-col items-center justify-center gap-6 bg-gray-50 p-6">
+  <div class="flex min-h-screen flex-col items-center justify-center gap-8 bg-gray-50 p-6">
     <h1 class="text-3xl font-semibold text-gray-800">Ariunmur</h1>
     <p class="max-w-sm text-center text-gray-500">
       Хятад-Монгол HSK үгийн сангийн апп
     </p>
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <RouterLink
+        v-for="lvl in [1, 2, 3, 4, 5]"
+        :key="lvl"
+        :to="`/vocab?level=${lvl}`"
+        class="rounded-xl bg-indigo-600 px-8 py-4 font-medium text-white shadow hover:bg-indigo-700"
+      >HSK {{ lvl }}</RouterLink>
+    </div>
     <RouterLink
       to="/vocab"
-      class="rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white shadow hover:bg-indigo-700"
-    >Үгсийн санг нээх</RouterLink>
+      class="text-sm font-medium text-gray-400 hover:text-indigo-600"
+    >Бүх үгсийн санг нээх →</RouterLink>
   </div>
 </template>
