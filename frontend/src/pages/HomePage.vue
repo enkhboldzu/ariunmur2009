@@ -19,11 +19,11 @@ const levels = [
         <div
           v-for="item in levels"
           :key="item.level"
-          class="flex flex-col items-center justify-between gap-3 py-3 sm:flex-row sm:gap-4"
+          class="flex flex-col items-center justify-between gap-3 py-2 sm:flex-row sm:gap-4"
         >
           <RouterLink
             :to="`/vocab?level=${item.level}`"
-            class="w-full rounded-xl bg-blue-600 px-8 py-3 text-center font-semibold text-white shadow hover:bg-blue-700 sm:w-auto"
+            class="flex h-20 w-20 items-center justify-center rounded-xl bg-blue-400 text-lg font-semibold text-white shadow hover:bg-blue-500"
           >HSK {{ item.level }}</RouterLink>
           <span class="text-sm text-gray-500">{{ item.desc }}</span>
         </div>

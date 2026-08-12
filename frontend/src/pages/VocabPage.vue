@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 pb-16">
+  <div class="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50 pb-16">
     <header class="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur">
       <div class="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
         <h1 class="text-xl font-semibold text-gray-900">Ariunmur</h1>
@@ -205,8 +205,10 @@ async function loadWords() {
   clearTimeout(timer)
   timer = setTimeout(async () => {
     const params = new URLSearchParams()
-    if (selectedLevel.value) params.set('level', selectedLevel.value)
-    if (search.value.trim()) params.set('q', search.value.trim())
+    if (!favoriteOnly.value) {
+      if (selectedLevel.value) params.set('level', selectedLevel.value)
+      if (search.value.trim()) params.set('q', search.value.trim())
+    }
     try {
       const res = await fetch(`/api/words?${params}`)
       const data = await res.json()
@@ -221,7 +223,11 @@ async function loadWords() {
   }, selectedLevel.value ? 0 : 250)
 }
 
-watch([search, selectedLevel], loadWords)
+watch(() => route.query.level, (v) => {
+  selectedLevel.value = Number(v) || 0
+})
+
+watch([search, selectedLevel, favoriteOnly], loadWords)
 
 fetch('/api/words/stats')
   .then((r) => r.json())
