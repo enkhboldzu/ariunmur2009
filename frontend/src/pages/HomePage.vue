@@ -24,7 +24,7 @@ const isActive = (level) => String(route.query.level) === String(level)
         <div
           v-for="item in levels"
           :key="item.level"
-          class="flex flex-col items-center justify-between gap-3 rounded-xl px-3 py-2 transition-colors duration-200 hover:bg-gray-100/80 sm:flex-row sm:gap-4"
+          class="-mx-3 flex flex-col items-center gap-3 rounded-xl px-3 py-2 transition-colors duration-200 hover:bg-gray-100/80 sm:flex-row sm:gap-4"
         >
           <RouterLink
             :to="`/vocab?level=${item.level}`"
