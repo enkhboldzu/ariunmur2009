@@ -1,10 +1,6 @@
 <template>
   <div class="flex min-h-screen flex-col items-center justify-center gap-8 bg-gray-50 p-6">
-    <h1 class="text-3xl font-semibold text-gray-800">Ariunmur</h1>
-    <p class="max-w-sm text-center text-gray-500">
-      Хятад-Монгол HSK үгийн сангийн апп
-    </p>
-    <div class="flex flex-wrap items-center justify-center gap-3">
+    <div class="flex w-full max-w-xs flex-col items-center gap-3">
       <RouterLink
         v-for="lvl in [1, 2, 3, 4, 5]"
         :key="lvl"
