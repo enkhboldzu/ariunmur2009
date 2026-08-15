@@ -47,6 +47,7 @@ app.get('/api/words', async (req, res, next) => {
       `TRANSLATE(LOWER(pinyin), 'āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü', 'aaaaeeeeiiiioooouuuuuuuuuu')`
     const { rows } = await pool.query(
       `SELECT id, hsk_level, simplified, pinyin, meaning_mn, meaning_en,
+              pos, pos_mn, collocations, sentences, extensions,
               ROW_NUMBER() OVER (PARTITION BY hsk_level ORDER BY ${sortKey}, pinyin, id)::int AS rank
        FROM words ${where}
        ORDER BY hsk_level, ${sortKey}, pinyin, id`,
@@ -72,7 +73,7 @@ app.get('/api/words/stats', async (req, res, next) => {
 app.get('/api/words/:id', async (req, res, next) => {
   try {
     const { rows } = await pool.query(
-      'SELECT id, hsk_level, simplified, pinyin, meaning_mn, meaning_en FROM words WHERE id = $1',
+      'SELECT id, hsk_level, simplified, pinyin, meaning_mn, meaning_en, pos, pos_mn, collocations, sentences, extensions FROM words WHERE id = $1',
       [Number(req.params.id)]
     )
     if (!rows.length) return res.status(404).json({ error: 'Word not found' })

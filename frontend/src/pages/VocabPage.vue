@@ -1,13 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-purple-50 to-blue-50 pb-16">
-    <header class="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur">
+  <div class="min-h-screen bg-gradient-to-b from-indigo-100 via-sky-50 to-purple-100 pb-16">
+    <header class="sticky top-0 z-10 border-b border-indigo-100 bg-white/90 backdrop-blur">
       <div class="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
-        <h1 class="text-xl font-semibold text-gray-900">Ariunmur</h1>
-        <nav class="flex gap-1 text-sm">
-          <RouterLink to="/" class="rounded-lg px-3 py-1.5 text-gray-600 hover:bg-gray-100">Нүүр</RouterLink>
+        <RouterLink to="/" class="text-lg font-bold text-indigo-600">HSK Үгсийн сан</RouterLink>
+        <nav class="flex gap-2 text-sm">
+          <RouterLink
+            to="/"
+            class="rounded-full px-4 py-1.5 font-semibold transition-all duration-200"
+            :class="!isVocab
+              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
+              : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'"
+          >Нүүр</RouterLink>
           <RouterLink
             to="/vocab"
-            class="rounded-lg px-3 py-1.5 font-medium text-indigo-600 hover:bg-indigo-50"
+            class="rounded-full px-4 py-1.5 font-semibold transition-all duration-200"
+            :class="isVocab
+              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/40'
+              : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'"
           >Үгсийн сан</RouterLink>
         </nav>
       </div>
@@ -128,6 +137,36 @@
             </div>
             <div class="mt-1 text-sm text-gray-800">{{ w.meaning_mn }}</div>
             <div v-if="w.meaning_en" class="text-xs text-gray-400">{{ w.meaning_en }}</div>
+            <div v-if="w.pos" class="mt-2 flex flex-wrap items-center gap-1.5">
+              <span class="rounded-md bg-indigo-50 px-1.5 py-0.5 text-[11px] font-semibold text-indigo-600">{{ w.pos }}</span>
+              <span v-if="w.pos_mn" class="rounded-md bg-purple-50 px-1.5 py-0.5 text-[11px] font-medium text-purple-600">{{ w.pos_mn }}</span>
+            </div>
+            <div v-if="w.collocations?.length" class="mt-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-400">Хамтрах үгс</p>
+              <div class="mt-1 flex flex-wrap gap-1.5">
+                <span
+                  v-for="c in w.collocations"
+                  :key="c"
+                  class="rounded-full bg-sky-50 px-2 py-0.5 text-xs text-sky-700 ring-1 ring-sky-100"
+                >{{ c }}</span>
+              </div>
+            </div>
+            <div v-if="w.sentences?.length" class="mt-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-400">Жишээ өгүүлбэр</p>
+              <ul class="mt-1 space-y-1">
+                <li v-for="(s, i) in w.sentences" :key="i" class="text-sm text-gray-700">· {{ s }}</li>
+              </ul>
+            </div>
+            <div v-if="w.extensions?.length" class="mt-2">
+              <p class="text-[11px] font-semibold uppercase tracking-wide text-gray-400">Өргөтгөл үгс</p>
+              <div class="mt-1 flex flex-wrap gap-1.5">
+                <span
+                  v-for="x in w.extensions"
+                  :key="x"
+                  class="rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700 ring-1 ring-amber-100"
+                >{{ x }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -143,6 +182,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
+const isVocab = computed(() => route.path === '/vocab')
 const search = ref('')
 const selectedLevel = ref(Number(route.query.level) || 0)
 const words = ref([])
