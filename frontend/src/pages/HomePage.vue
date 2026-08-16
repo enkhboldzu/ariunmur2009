@@ -24,8 +24,7 @@ fetch('/api/words/stats')
 
 <template>
   <div
-    class="relative min-h-screen bg-cover bg-center p-6"
-    style="background-image: url('https://images.pexels.com/photos/36480901/pexels-photo-36480901.jpeg?auto=compress&cs=tinysrgb&w=1920')"
+    class="relative min-h-screen bg-cover bg-center bg-[url('https://images.pexels.com/photos/36480901/pexels-photo-36480901.jpeg?auto=compress&cs=tinysrgb&w=1920')] p-6"
   >
     <div class="absolute inset-0 bg-white/40" />
     <div class="relative mx-auto max-w-2xl">
